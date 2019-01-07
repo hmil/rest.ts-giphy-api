@@ -1,0 +1,29 @@
+{
+  "name": "rest-ts-giphy-api",
+  "version": "0.0.0",
+  "description": "Rest.ts definitions for the giphy API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hmil/rest-ts-giphy-api.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hmil/rest-ts-giphy-api/issues"
+  },
+  "homepage": "https://github.com/hmil/rest-ts-giphy-api#readme",
+  "dependencies": {
+    "rest-ts-core": "^0.4.2"
+  },
+  "devDependencies": {
+    "axios": "^0.18.0",
+    "rest-ts-axios": "^0.4.2",
+    "tslint": "^5.12.0",
+    "typescript": "^3.2.2",
+    "typestrict": "^1.0.2"
+  }
+}

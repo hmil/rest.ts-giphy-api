@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "importHelpers": false,
+        "sourceMap": true,
+        "declaration": true,
+        "target": "es5",
+        "module": "commonjs",
+        "lib": [
+            "es2015"
+        ]
+    },
+    "inclide": [
+        "index.ts",
+        "test/*.ts"
+    ]
+}
