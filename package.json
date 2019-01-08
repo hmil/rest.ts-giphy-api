@@ -4,7 +4,7 @@
   "description": "Rest.ts definitions for the giphy API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ts-node test/api.test.ts"
   },
   "repository": {
     "type": "git",
@@ -17,11 +17,15 @@
   },
   "homepage": "https://github.com/hmil/rest-ts-giphy-api#readme",
   "dependencies": {
-    "rest-ts-core": "^0.4.2"
+    "rest-ts-core": "^0.5.0",
+    "runtypes": "^3.1.2"
   },
   "devDependencies": {
+    "@types/node": "^10.12.18",
     "axios": "^0.18.0",
-    "rest-ts-axios": "^0.4.2",
+    "rest-ts-axios": "^0.5.0",
+    "should": "^13.2.3",
+    "ts-node": "^7.0.1",
     "tslint": "^5.12.0",
     "typescript": "^3.2.2",
     "typestrict": "^1.0.2"

@@ -1,93 +1,94 @@
 
 import { defineAPI, GET } from 'rest-ts-core';
+import { Array, String, Number, Boolean, Union, Literal, Record, Intersect } from 'runtypes';
 
 
 // Basic types stubs
-const string = '';
-const number = 42;
-const boolean = true;
 const optional = <T>(_: T): T | undefined => void 0;
 
 
 // Giphy DTO types
 
-const LangCode = string as
-    | 'es'
-    | 'pt'
-    | 'id'
-    | 'fr'
-    | 'ar'
-    | 'tr'
-    | 'th'
-    | 'vi'
-    | 'de'
-    | 'it'
-    | 'ja'
-    | 'zh-CN'
-    | 'zh-TW'
-    | 'ru'
-    | 'ko'
-    | 'pl'
-    | 'nl'
-    | 'ro'
-    | 'hu'
-    | 'sv'
-    | 'cs'
-    | 'hi'
-    | 'bn'
-    | 'da'
-    | 'fa'
-    | 'tl'
-    | 'fi'
-    | 'iw'
-    | 'ms'
-    | 'no'
-    | 'uk';
+const LangCode = Union(
+    Union(
+    Literal('es'),
+    Literal('pt'),
+    Literal('id'),
+    Literal('fr'),
+    Literal('ar'),
+    Literal('tr'),
+    Literal('th'),
+    Literal('vi'),
+    Literal('de'),
+    Literal('it'),
+    Literal('ja'),
+    Literal('zh-CN'),
+    Literal('zh-TW'),
+    Literal('ru'),
+    Literal('ko'),
+    Literal('pl'),
+    Literal('nl'),
+    Literal('ro'),
+    Literal('hu'),
+    Literal('sv'),
+    ), Union(
+    Literal('cs'),
+    Literal('hi'),
+    Literal('bn'),
+    Literal('da'),
+    Literal('fa'),
+    Literal('tl'),
+    Literal('fi'),
+    Literal('iw'),
+    Literal('ms'),
+    Literal('no'),
+    Literal('uk')
+    ));
 
 
-const basicImage = {
+const basicImage = Record({
     /** The publicly-accessible direct URL for this GIF. */
-    url: string,
+    url: String,
     /** The width of this GIF in pixels. */
-    width: string,
+    width: String,
     /** The height of this GIF in pixels. */
-    height: string
-};
+    height: String
+});
 
-const webp = {
+const webp = Record({
     /** The URL for this GIF in .webp format. */
-    webp: string,
+    webp: String,
     /** The size in bytes of the .webp file corresponding to this GIF. */
-    webp_size: string
-};
+    webp_size: String
+});
 
-const mp4 = {
+const mp4 = Record({
     /** The URL for this GIF in .MP4 format. */
-    mp4: string,
+    mp4: String,
     /** The size in bytes of the .MP4 file corresponding to this GIF. */
-    mp4_size: string
-};
+    mp4_size: String
+});
 
-const sizeable = {
+const sizeable = Record({
     /** The size of this GIF in bytes. */
-    size: string
-};
+    size: String
+});
 
-const fullImage = { ...basicImage, ...sizeable, ...mp4, ...webp };
-const imageWithWebp = { ...basicImage, ...sizeable, ...webp };
+const fullImage = Intersect(basicImage, sizeable, mp4, webp);
+const imageWithWebp = Intersect(basicImage, sizeable, webp);
 
-const ImageObject = {
+const ImageObject = Record({
     /** Data surrounding versions of this GIF with a fixed height of 200 pixels. Good for mobile use.  */
     fixed_height: fullImage,
     /** Data surrounding a static image of this GIF with a fixed height of 200 pixels. */
     fixed_height_still: basicImage,
-    /** Data surrounding versions of this GIF with a fixed height of 200 pixels and the number of frames reduced to 6. */
+    /** Data surrounding versions of this GIF with a fixed height of 200 pixels and the Number of frames reduced to 6. */
     fixed_height_downsampled: imageWithWebp,
     /** Data surrounding versions of this GIF with a fixed width of 200 pixels. Good for mobile use. */
     fixed_width: fullImage,
     /** Data surrounding a static image of this GIF with a fixed width of 200 pixels. */
     fixed_width_still: basicImage,
-    /** Data surrounding versions of this GIF with a fixed width of 200 pixels and the number of frames reduced to 6. */
+    /** Data surrounding versions of this GIF with a fixed width of 200 pixels and the Number of frames reduced to 6. */
     fixed_width_downsampled: imageWithWebp,
     /** Data surrounding versions of this GIF with a fixed height of 100 pixels. Good for mobile keyboards. */
     fixed_height_small: imageWithWebp,
@@ -108,194 +109,193 @@ const ImageObject = {
     /** Data surrounding a version of this GIF downsized to be under 200kb. */
     downsized_small: {...basicImage, ...sizeable },
     /** Data surrounding the original version of this GIF. Good for desktop use. */
-    original: { ...fullImage, frames: string },
+    original: { ...fullImage, frames: String },
     /** Data surrounding a static preview image of the original GIF. */
     original_still: basicImage,
     /** Data surrounding a version of this GIF set to loop for 15 seconds. */
-    looping: {
+    looping: Record({
         /** The URL for this GIF in .MP4 format. */
-        mp4: string
-    },
+        mp4: String
+    }),
     /** Data surrounding a version of this GIF in .MP4 format limited to 50kb that displays the first 1-2 seconds of the GIF. */
-    preview: {
-        ...mp4,
+    preview: Intersect(mp4, Record({
         /** The width of this file in pixels. */
-        width: string,
+        width: String,
         /** The height of this file in pixels. */
-        height: string
-    },
+        height: String
+    })),
     /** Data surrounding a version of this GIF limited to 50kb that displays the first 1-2 seconds of the GIF. */
-    preview_gif: { ...basicImage, ...sizeable }
-};
+    preview_gif: Intersect(basicImage, sizeable)
+});
 
-const MetaObject = {
+const MetaObject = Record({
     /** HTTP Response Message */
-    msg: string,
+    msg: String,
     /** HTTP Response Code */
-    status: number,
+    status: Number,
     /** A unique ID paired with this response from the API. */
-    response_id: string
-};
+    response_id: String
+});
 
-const UserObject = {
+const UserObject = Record({
     /** The URL for this user's avatar image. */
-    avatar_url: string,
+    avatar_url: String,
     /** The URL for the banner image that appears atop this user's profile page. */
-    banner_url: string,
+    banner_url: String,
     /** The URL for this user's profile. */
-    profile_url: string,
+    profile_url: String,
     /** The username associated with this user. */
-    username: string,
+    username: String,
     /** The display name associated with this user (contains formatting the base username might not). */
-    display_name: string,
+    display_name: String,
     /** The Twitter username associated with this user, if applicable. */
-    twitter: string
-};
+    twitter: String
+});
 
-const GIFObject = {
+const GIFObject = Record({
     /** By default, this is almost always gif */
-    type: string,
+    type: String,
     /** This GIF's unique ID */
-    id: string,
+    id: String,
     /** The unique slug used in this GIF's URL */
-    slug: string,
+    slug: String,
     /** The unique URL for this GIF */
-    url: string,
+    url: String,
     /** The unique bit.ly URL for this GIF */
-    bitly_url: string,
+    bitly_url: String,
     /** A URL used for embedding this GIF */
-    embed_url: string,
+    embed_url: String,
     /** The username this GIF is attached to, if applicable */
-    username: string,
+    username: String,
     /** The page on which this GIF was found */
-    source: string,
+    source: String,
     /** The MPAA-style rating for this content. Examples include Y, G, PG, PG-13 and R */
-    rating: string,
+    rating: String,
     /** Currently unused */
-    content_url: string,
+    content_url: String,
     /** An object containing data about the user associated with this GIF, if applicable. */
     user: UserObject,
     /** The top level domain of the source URL. */
-    source_tld: string,
+    source_tld: String,
     /** The URL of the webpage on which this GIF was found. */
-    source_post_url: string,
+    source_post_url: String,
     /** The date on which this GIF was last updated. */
-    update_datetime: string,
+    update_datetime: String,
     /** The date this GIF was added to the GIPHY database. */
-    create_datetime: string,
+    create_datetime: String,
     /** The creation or upload date from this GIF's source. */
-    import_datetime: string,
+    import_datetime: String,
     /** The date on which this gif was marked trending, if applicable. */
-    trending_datetime: string,
+    trending_datetime: String,
     /** An object containing data for various available formats and sizes of this GIF. */
     images: ImageObject,
     /** The title that appears on giphy.com for this GIF. */
-    title: string,
-};
+    title: String,
+});
 
 
-const PaginationObject = {
+const PaginationObject = Record({
     /** Position in pagination. */
-    offset: number,
-    /** Total number of items available. */
-    total_count: number,
-    /** Total number of items returned. */
-    count: number
-};
+    offset: Number,
+    /** Total Number of items available. */
+    total_count: Number,
+    /** Total Number of items returned. */
+    count: Number
+});
 
-const ChildPackObject = {
+const ChildPackObject = Record({
     /** This Sticker Pack's unique numeric ID. */
-    id: number,
+    id: Number,
     /** Numeric identifier for the parent Sticker Pack. */
-    parent: number,
+    parent: Number,
     /** Will return "community" or "editorial". This describes whether this Sticker Pack is curated by GIPHY or by the community. */
-    type: string as 'community' | 'editorial',
+    type: Union(Literal('community'), Literal('editorial')),
     /** Will always return "sticker" in this case. */
-    content_type: 'sticker',
+    content_type: Literal('sticker'),
     /** URL-friendly name for this Sticker Pack. */
-    slug: string,
+    slug: String,
     /** Human-readable name for this Sticker Pack. (May contain formatting the other names don't). */
-    display_name: string,
+    display_name: String,
     /** A more concise version of this Sticker Pack's display name. */
-    short_display_name: string,
+    short_display_name: String,
     /** Long form description of this Sticker Pack. */
-    description: string,
+    description: String,
     /** Will return a banner image for this Sticker Pack (either JPG, PNG, or GIF) with 1040x160 dimensions. */
-    banner_image: string,
+    banner_image: String,
     /** Describes whether or not this Sticker Pack contains child Sticker Packs. */
-    has_children: boolean,
+    has_children: Boolean,
     /** The GIPHY user associated with this Sticker Pack. */
     user: UserObject,
     /** The GIF that will appear in a thumbnail, header image or other visual representation when referencing this Sticker Pack. */
     featured_gif: GIFObject
-};
+});
 
-const StickerPackMetadataObject = {
+const StickerPackMetadataObject = Record({
     /** This Sticker Pack's unique numeric ID. */
-    id: number,
+    id: Number,
     /** Human-readable name for this Sticker Pack. (May contain formatting the other names don't). */
-    display_name: string,
+    display_name: String,
     /** URL-friendly slug for this Sticker Pack. */
-    slug: string,
+    slug: String,
     /** Will always return "sticker" in this case. */
-    content_type: string,
+    content_type: String,
     /** A more concise version of this Sticker Pack's display name. */
-    short_display_name: string,
+    short_display_name: String,
     /** Long form description of this Sticker Pack. */
-    description: string,
+    description: String,
     /** Will return a banner image for this Sticker Pack (either JPG, PNG, or GIF) with 1040x160 dimensions. */
-    banner_image: string,
+    banner_image: String,
     /** Describes whether or not this Sticker Pack contains child Sticker Packs. */
-    has_children: boolean,
+    has_children: Boolean,
     /** The GIPHY user associated with this Sticker Pack. */
     user: UserObject,
     /** The GIF that will appear in a thumbnail, header image or other visual representation when referencing this Sticker Pack. */
     featured_gif: GIFObject,
     /** An array of tags which make the sticker packs discoverable via a search */
-    tags: [{
+    tags: Array(Record({
         /** The name of an individual tag associated with this Sticker Pack. */
-        tag: string,
+        tag: String,
         /** An ordering of the relevance of this tag to the Sticker Pack. (Begins with 0). */
-        rank: number
-    }],
+        rank: Number
+    })),
     /** An array of all ancestor Sticker Packs. (Sticker packs are hierarchical, all sticker parents descend from the root sticker pack "Stickers".) */
-    ancestors: [{
+    ancestors: Array(Record({
         /** This ancestor Sticker Pack's unique numeric ID. */
-        id: number,
+        id: Number,
         /** URL-friendly name for this ancestor Sticker Pack. */
-        slug: string,
+        slug: String,
         /** Human-readable name for this ancestor Sticker Pack. (May contain formatting the other names don't). */
-        display_name: string,
+        display_name: String,
         /** A more concise version of this ancestor Sticker Pack's display name. */
-        short_display_name: string,
+        short_display_name: String,
         /** The ID of the GIF that will appear in a thumbnail, header image or other visual representation when referencing this ancestor Sticker Pack. */
-        featured_gif_id: string,
+        featured_gif_id: String,
         /** Numeric identifier for the parent Sticker Pack, if applicable. */
-        parent: string,
+        parent: String,
         /** Describes whether or not this ancestor Sticker Pack contains child Sticker Packs. */
-        has_children: boolean,
+        has_children: Boolean,
         /** Will return a banner image for this Sticker Pack (either JPG, PNG, or GIF) with 1040x160 dimensions. */
-        banner_image: string
-    }]
-};
+        banner_image: String
+    }))
+});
 
 const apiKeyQueryParam = {
     /** GIPHY API Key. */
-    api_key: string,
+    api_key: String,
 };
 
 const fmtQueryParam = {
      /** Used to indicate the expected response format. Default is Json. */
-    fmt: optional(string)
+    fmt: optional(String)
 };
 
 const searchQueryParams = {
-    /** The maximum number of records to return. */
-    limit: optional(number),
+    /** The maximum Number of records to return. */
+    limit: optional(Number),
     /** An optional results offset. Defaults to 0. */
-    offset: optional(number),
+    offset: optional(Number),
     /** Filters results by specified rating. */
-    rating: optional(string),
+    rating: optional(String),
 };
 
 export const giphyAPI = defineAPI({
@@ -312,9 +312,9 @@ export const giphyAPI = defineAPI({
             /** 
              * Search query term or phrase.
              * GIPHY search will automatically look for exact matches to queries + AND match + OR match. Explicit AND + 
-             * OR boolean clauses in search queries are not supported. 
+             * OR Boolean clauses in search queries are not supported. 
              */
-            q: string,
+            q: String,
             /** 
              * Specify default country for regional content; format is 2-letter ISO 639-1 country code. 
              * See list of supported languages [here](https://developers.giphy.com/docs/#language-support) 
@@ -351,9 +351,9 @@ export const giphyAPI = defineAPI({
         .query({
             ...apiKeyQueryParam,
             /** Search term. */
-            s: string,
+            s: String,
             /** value from 0-10 which makes results more or less weird/random/wtf */
-            weirdness: number
+            weirdness: Number
         })
         .response({
             data: GIFObject,
@@ -366,12 +366,12 @@ export const giphyAPI = defineAPI({
             ...apiKeyQueryParam,
             ...fmtQueryParam,
             /** Filters results by specified tag. */
-            tag: optional(string),
+            tag: optional(String),
             /** Filters results by specified rating. */
-            rating: optional(string)
+            rating: optional(String)
         })
         .response({
-            data: [GIFObject],
+            data: GIFObject,
             meta: MetaObject
         }),
 
@@ -381,7 +381,7 @@ export const giphyAPI = defineAPI({
             ...apiKeyQueryParam
         })
         .response({
-            data: [GIFObject],
+            data: GIFObject,
             meta: MetaObject
         }),
 
@@ -390,7 +390,7 @@ export const giphyAPI = defineAPI({
         .query({
             ...apiKeyQueryParam,
             /** Filters results by specified GIF IDs, separated by commas. */
-            ids: string
+            ids: String
         })
         .response({
             data: [GIFObject],
@@ -407,9 +407,9 @@ export const giphyAPI = defineAPI({
             /** 
              * Search query term or phrase.
              * GIPHY search will automatically look for exact matches to queries + AND match + OR match. Explicit AND + 
-             * OR boolean clauses in search queries are not supported. 
+             * OR Boolean clauses in search queries are not supported. 
              */
-            q: string,
+            q: String,
             /** 
              * Specify default country for regional content; format is 2-letter ISO 639-1 country code. 
              * See list of supported languages [here](https://developers.giphy.com/docs/#language-support) 
@@ -427,10 +427,10 @@ export const giphyAPI = defineAPI({
         .query({
             ...apiKeyQueryParam,
             ...fmtQueryParam,
-            /** The maximum number of records to return. */
-            limit: optional(number),
+            /** The maximum Number of records to return. */
+            limit: optional(Number),
             /** Filters results by specified rating. */
-            rating: optional(string),
+            rating: optional(String),
         })
         .response({
             data: [GIFObject],
@@ -445,7 +445,7 @@ export const giphyAPI = defineAPI({
         .query({
             ...apiKeyQueryParam,
             /** Search term. */
-            s: string
+            s: String
         })
         .response({
             data: GIFObject,
@@ -461,9 +461,9 @@ export const giphyAPI = defineAPI({
             ...apiKeyQueryParam,
             ...fmtQueryParam,
             /** Filters results by specified tag. */
-            tag: optional(string),
+            tag: optional(String),
             /** Filters results by specified rating. */
-            rating: optional(string),
+            rating: optional(String),
         })
         .response({
             data: [GIFObject],
@@ -487,10 +487,10 @@ export const giphyAPI = defineAPI({
     getStickerPack: GET `/stickers/packs/${'pack_id'}`
         .query({
             ...apiKeyQueryParam,
-            /** The maximum number of records to return. */
-            limit: optional(number),
+            /** The maximum Number of records to return. */
+            limit: optional(Number),
             /** An optional results offset. Defaults to 0. */
-            offset: optional(number),
+            offset: optional(Number),
         })
         .response({
             data: [StickerPackMetadataObject],
@@ -505,10 +505,10 @@ export const giphyAPI = defineAPI({
     getStickerPacksStickers: GET `/stickers/packs/${'pack_id'}/stickers`
         .query({
             ...apiKeyQueryParam,
-            /** The maximum number of records to return. */
-            limit: optional(number),
+            /** The maximum Number of records to return. */
+            limit: optional(Number),
             /** An optional results offset. Defaults to 0. */
-            offset: optional(number),
+            offset: optional(Number),
         })
         .response({
             data: [GIFObject],
